@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Namma Sethu{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+
+            <div class="card shadow p-4">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-green">🌉 Namma Sethu</h2>
+                    <p class="text-secondary">Login to continue</p>
+                </div>
+
+                <form method="POST" action="#">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="Enter your email"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Enter your password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="primary-btn w-100">
+                        Login
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <a href="/" class="text-green">
+                        ← Back to Home
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,70 @@
+:root {
+    --deep-green: #087F5B;
+    --fresh-green: #22C55E;
+    --light-green: #A7F3D0;
+    --cream: #F8FAF6;
+    --dark-navy: #1E293B;
+    --white: #FFFFFF;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: var(--dark-navy);
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app-container {
+    min-height: 100vh;
+}
+
+.page-section {
+    padding: 40px 20px;
+}
+
+.primary-btn {
+    background: var(--deep-green);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-weight: 600;
+}
+
+.primary-btn:hover {
+    background: #066b4c;
+}
+
+.secondary-btn {
+    background: var(--light-green);
+    color: var(--deep-green);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-weight: 600;
+}
+
+.card {
+    border: none;
+    border-radius: 16px;
+}
+
+.text-green {
+    color: var(--deep-green);
+}
+
+.bg-green {
+    background: var(--deep-green);
+}

@@ -1,0 +1,989 @@
+{% extends "base.html" %}
+
+{% block title %}
+Staff Dashboard | Namma Sethu
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="dashboard-header">
+
+        <div>
+            <h1>🌉 Staff Dashboard</h1>
+            <p>Manage and track citizen complaints.</p>
+        </div>
+
+        <a href="{{ url_for('auth.logout') }}" class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <h3>Total Complaints</h3>
+            <p>{{ complaints|length }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Submitted</h3>
+            <p>
+                {{ complaints|selectattr("status", "equalto", "SUBMITTED")|list|length }}
+            </p>
+        </div>
+
+        <div class="stat-card">
+            <h3>In Progress</h3>
+            <p>
+                {{ complaints|selectattr("status", "equalto", "IN_PROGRESS")|list|length }}
+            </p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Resolved</h3>
+            <p>
+                {{ complaints|selectattr("status", "equalto", "RESOLVED")|list|length }}
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- COMPLAINT SECTION -->
+
+    <div class="complaints-section">
+
+        <div class="section-heading">
+
+            <h2>Citizen Complaints</h2>
+
+            <a href="{{ url_for('home') }}" class="home-btn">
+                ← Home
+            </a>
+
+        </div>
+
+
+        {% if complaints %}
+
+        <div class="complaints-container">
+
+            {% for complaint in complaints %}
+
+            <div class="complaint-card">
+
+                <!-- COMPLAINT HEADER -->
+
+                <div class="complaint-header">
+
+                    <div>
+
+                        <h3>
+                            {{ complaint.complaint_code }}
+                        </h3>
+
+                        <p class="issue-type">
+                            {{ complaint.issue_type }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- CURRENT STATUS -->
+
+                    <div>
+
+                        {% if complaint.status == "SUBMITTED" %}
+
+                            <span class="status submitted">
+                                SUBMITTED
+                            </span>
+
+                        {% elif complaint.status == "ASSIGNED" %}
+
+                            <span class="status assigned">
+                                ASSIGNED
+                            </span>
+
+                        {% elif complaint.status == "IN_PROGRESS" %}
+
+                            <span class="status progress">
+                                IN PROGRESS
+                            </span>
+
+                        {% elif complaint.status == "SLA_BREACHED" %}
+
+                            <span class="status breached">
+                                SLA BREACHED
+                            </span>
+
+                        {% elif complaint.status == "RESOLVED" %}
+
+                            <span class="status resolved">
+                                RESOLVED
+                            </span>
+
+                        {% elif complaint.status == "REOPENED" %}
+
+                            <span class="status reopened">
+                                REOPENED
+                            </span>
+
+                        {% elif complaint.status == "CLOSED" %}
+
+                            <span class="status closed">
+                                CLOSED
+                            </span>
+
+                        {% else %}
+
+                            <span class="status">
+                                {{ complaint.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- COMPLAINT DETAILS -->
+
+                <div class="complaint-details">
+
+                    <div class="detail">
+
+                        <strong>Description</strong>
+
+                        <p>
+                            {{ complaint.description }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <strong>Location</strong>
+
+                        <p>
+                            {{ complaint.location_text or "Not provided" }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <strong>Priority</strong>
+
+                        <p>
+
+                            {% if complaint.priority == "CRITICAL" %}
+
+                                <span class="badge critical">
+                                    CRITICAL
+                                </span>
+
+                            {% elif complaint.priority == "HIGH" %}
+
+                                <span class="badge high">
+                                    HIGH
+                                </span>
+
+                            {% elif complaint.priority == "LOW" %}
+
+                                <span class="badge low">
+                                    LOW
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge medium">
+                                    MEDIUM
+                                </span>
+
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <strong>Created</strong>
+
+                        <p>
+                            {{ complaint.created_at }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS UPDATE -->
+
+                <div class="status-update-section">
+
+                    <h4>
+                        Update Complaint
+                    </h4>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'staff.update_status',
+                            complaint_id=complaint.complaint_id
+                        ) }}"
+                    >
+
+                        <div class="form-grid">
+
+                            <!-- STATUS -->
+
+                            <div class="form-group">
+
+                                <label for="status-{{ complaint.complaint_id }}">
+                                    New Status
+                                </label>
+
+                                <select
+                                    id="status-{{ complaint.complaint_id }}"
+                                    name="status"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select status
+                                    </option>
+
+                                    <option value="CHECKING_LOCATION">
+                                        Checking Location
+                                    </option>
+
+                                    <option value="MANUAL_REVIEW">
+                                        Manual Review
+                                    </option>
+
+                                    <option value="ROUTED">
+                                        Routed
+                                    </option>
+
+                                    <option value="ACKNOWLEDGED">
+                                        Acknowledged
+                                    </option>
+
+                                    <option value="ASSIGNED">
+                                        Assigned
+                                    </option>
+
+                                    <option value="IN_PROGRESS">
+                                        In Progress
+                                    </option>
+
+                                    <option value="SLA_BREACHED">
+                                        SLA Breached
+                                    </option>
+
+                                    <option value="RESOLVED">
+                                        Resolved
+                                    </option>
+
+                                    <option value="REOPENED">
+                                        Reopened
+                                    </option>
+
+                                    <option value="CLOSED">
+                                        Closed
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- NOTE -->
+
+                            <div class="form-group">
+
+                                <label for="note-{{ complaint.complaint_id }}">
+                                    Staff Note
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="note-{{ complaint.complaint_id }}"
+                                    name="note"
+                                    placeholder="Example: Forwarded to drainage department"
+                                >
+
+                            </div>
+
+
+                            <!-- BUTTON -->
+
+                            <div class="form-group button-group">
+
+                                <label>&nbsp;</label>
+
+                                <button
+                                    type="submit"
+                                    class="update-btn"
+                                >
+                                    Update Status
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                📋
+            </div>
+
+            <h3>
+                No complaints yet
+            </h3>
+
+            <p>
+                Citizen complaints will appear here once they are submitted.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<style>
+
+/* =====================================================
+   GENERAL
+===================================================== */
+
+.container {
+    width: 92%;
+    max-width: 1400px;
+    margin: 40px auto;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.dashboard-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+
+    margin-bottom: 8px;
+
+}
+
+.dashboard-header p {
+
+    margin: 0;
+
+    color: #666;
+
+}
+
+.logout-btn {
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    background: #222;
+
+    color: white;
+
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+.stats-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+
+    margin-bottom: 35px;
+
+}
+
+.stat-card {
+
+    background: white;
+
+    padding: 24px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.08);
+
+}
+
+.stat-card h3 {
+
+    margin: 0 0 12px;
+
+    font-size: 15px;
+
+    color: #666;
+
+}
+
+.stat-card p {
+
+    margin: 0;
+
+    font-size: 30px;
+
+    font-weight: bold;
+
+}
+
+
+/* =====================================================
+   COMPLAINT SECTION
+===================================================== */
+
+.complaints-section {
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 4px 18px rgba(0,0,0,0.08);
+
+}
+
+.section-heading {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+
+}
+
+.section-heading h2 {
+
+    margin: 0;
+
+}
+
+.home-btn {
+
+    text-decoration: none;
+
+    padding: 9px 15px;
+
+    border-radius: 8px;
+
+    background: #f1f1f1;
+
+    color: #222;
+
+}
+
+
+/* =====================================================
+   COMPLAINT CARD
+===================================================== */
+
+.complaints-container {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+
+}
+
+.complaint-card {
+
+    border: 1px solid #e8e8e8;
+
+    border-radius: 14px;
+
+    padding: 22px;
+
+    background: #fff;
+
+}
+
+.complaint-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+
+}
+
+.complaint-header h3 {
+
+    margin: 0 0 6px;
+
+}
+
+.issue-type {
+
+    margin: 0;
+
+    color: #666;
+
+    font-weight: 600;
+
+}
+
+
+/* =====================================================
+   DETAILS
+===================================================== */
+
+.complaint-details {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+
+    padding: 18px 0;
+
+    border-top: 1px solid #eee;
+
+    border-bottom: 1px solid #eee;
+
+}
+
+.detail strong {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 13px;
+
+    color: #555;
+
+}
+
+.detail p {
+
+    margin: 0;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =====================================================
+   STATUS UPDATE
+===================================================== */
+
+.status-update-section {
+
+    margin-top: 20px;
+
+    padding: 20px;
+
+    background: #f8f9fb;
+
+    border-radius: 12px;
+
+}
+
+.status-update-section h4 {
+
+    margin-top: 0;
+
+    margin-bottom: 15px;
+
+}
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 2fr auto;
+
+    gap: 15px;
+
+    align-items: end;
+
+}
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+.form-group label {
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 7px;
+
+}
+
+.form-group select,
+.form-group input {
+
+    padding: 11px;
+
+    border: 1px solid #d5d5d5;
+
+    border-radius: 8px;
+
+    background: white;
+
+    font-size: 14px;
+
+    outline: none;
+
+}
+
+.form-group select:focus,
+.form-group input:focus {
+
+    border-color: #777;
+
+}
+
+.update-btn {
+
+    padding: 11px 20px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #222;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+}
+
+.update-btn:hover {
+
+    opacity: 0.85;
+
+}
+
+
+/* =====================================================
+   BADGES
+===================================================== */
+
+.badge {
+
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+}
+
+.critical {
+
+    background: #ffdede;
+
+    color: #a00000;
+
+}
+
+.high {
+
+    background: #ffe8d1;
+
+    color: #9a4b00;
+
+}
+
+.medium {
+
+    background: #fff3c4;
+
+    color: #775d00;
+
+}
+
+.low {
+
+    background: #dcf5df;
+
+    color: #246b2b;
+
+}
+
+
+/* =====================================================
+   STATUS BADGES
+===================================================== */
+
+.status {
+
+    display: inline-block;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    background: #eee;
+
+}
+
+.submitted {
+
+    background: #e8f0ff;
+
+    color: #315ca8;
+
+}
+
+.assigned {
+
+    background: #eee4ff;
+
+    color: #6338a8;
+
+}
+
+.progress {
+
+    background: #fff0cf;
+
+    color: #8a6200;
+
+}
+
+.breached {
+
+    background: #ffdede;
+
+    color: #a00000;
+
+}
+
+.resolved {
+
+    background: #dcf5df;
+
+    color: #246b2b;
+
+}
+
+.reopened {
+
+    background: #ffe4f0;
+
+    color: #9b315d;
+
+}
+
+.closed {
+
+    background: #e2e2e2;
+
+    color: #444;
+
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.empty-state {
+
+    text-align: center;
+
+    padding: 60px 20px;
+
+}
+
+.empty-icon {
+
+    font-size: 45px;
+
+    margin-bottom: 15px;
+
+}
+
+.empty-state h3 {
+
+    margin-bottom: 8px;
+
+}
+
+.empty-state p {
+
+    color: #666;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1000px) {
+
+    .complaint-details {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+    .form-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .stats-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+    .dashboard-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+
+    }
+
+    .complaint-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .stats-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .complaint-details {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .complaints-section {
+
+        padding: 15px;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

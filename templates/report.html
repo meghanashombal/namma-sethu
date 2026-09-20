@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Report a Problem | Namma Sethu{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow p-4">
+                <div class="mb-4">
+                    <h2 class="fw-bold text-green">Report a Civic Problem</h2>
+                    <p class="text-secondary">
+                        Tell us what happened and we'll connect your complaint
+                        to the appropriate civic authority.
+                    </p>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="/report">
+
+                    <div class="mb-3">
+                        <label for="issue_type" class="form-label">
+                            Issue Type
+                        </label>
+
+                        <select
+                            id="issue_type"
+                            name="issue_type"
+                            class="form-select"
+                            required
+                        >
+                            <option value="">Select an issue</option>
+                            <option value="ROADS">Road Damage / Pothole</option>
+                            <option value="STREETLIGHT">Streetlight</option>
+                            <option value="GARBAGE">Garbage / Waste</option>
+                            <option value="DRAINAGE">Drainage / Sewage</option>
+                            <option value="WATER">Water Supply</option>
+                            <option value="TRAFFIC">Traffic / Road Safety</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            Describe the Problem
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            class="form-control"
+                            rows="5"
+                            placeholder="Explain the problem clearly..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="location_text" class="form-label">
+                            Location
+                        </label>
+
+                        <input
+                            type="text"
+                            id="location_text"
+                            name="location_text"
+                            class="form-control"
+                            placeholder="Enter the location"
+                        >
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="latitude" class="form-label">
+                                Latitude
+                            </label>
+
+                            <input
+                                type="text"
+                                id="latitude"
+                                name="latitude"
+                                class="form-control"
+                                placeholder="Optional"
+                            >
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="longitude" class="form-label">
+                                Longitude
+                            </label>
+
+                            <input
+                                type="text"
+                                id="longitude"
+                                name="longitude"
+                                class="form-control"
+                                placeholder="Optional"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-3">
+                        <button
+                            type="submit"
+                            class="primary-btn"
+                        >
+                            Submit Complaint
+                        </button>
+
+                        <a href="/" class="secondary-btn">
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

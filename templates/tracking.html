@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+
+{% block title %}Track Complaint | Namma Sethu{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow p-4">
+
+                <!-- Page Heading -->
+                <div class="text-center mb-4">
+
+                    <h2 class="fw-bold text-green">
+                        Track Your Complaint
+                    </h2>
+
+                    <p class="text-secondary">
+                        Enter your complaint ID to check its current status.
+                    </p>
+
+                </div>
+
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+
+                    {% if messages %}
+
+                        {% for category, message in messages %}
+
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+                <!-- Tracking Form -->
+                <form method="POST" action="/track">
+
+                    <div class="mb-3">
+
+                        <label
+                            for="complaint_code"
+                            class="form-label"
+                        >
+                            Complaint Tracking ID
+                        </label>
+
+                        <input
+                            type="text"
+                            id="complaint_code"
+                            name="complaint_code"
+                            class="form-control"
+                            placeholder="Example: NS-ABC12345"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="primary-btn w-100"
+                    >
+                        Track Complaint
+                    </button>
+
+                </form>
+
+
+                {% if complaint %}
+
+                    <hr class="my-4">
+
+
+                    <!-- Complaint Details -->
+                    <h4 class="fw-bold text-green mb-3">
+                        Complaint Details
+                    </h4>
+
+
+                    <div class="row g-3">
+
+                        <!-- Tracking ID -->
+                        <div class="col-md-6">
+
+                            <strong>
+                                Tracking ID
+                            </strong>
+
+                            <p>
+                                {{ complaint.complaint_code }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- Issue Type -->
+                        <div class="col-md-6">
+
+                            <strong>
+                                Issue Type
+                            </strong>
+
+                            <p>
+                                {{ complaint.issue_type }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- Description -->
+                        <div class="col-12">
+
+                            <strong>
+                                Description
+                            </strong>
+
+                            <p>
+                                {{ complaint.description }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- Location -->
+                        <div class="col-md-6">
+
+                            <strong>
+                                Location
+                            </strong>
+
+                            <p>
+                                {{ complaint.location_text or "Not provided" }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- Priority -->
+                        <div class="col-md-6">
+
+                            <strong>
+                                Priority
+                            </strong>
+
+                            <p>
+                                {{ complaint.priority }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- Current Status -->
+                        <div class="col-md-6">
+
+                            <strong>
+                                Current Status
+                            </strong>
+
+                            <p>
+
+                                <span class="badge bg-success">
+                                    {{ complaint.status }}
+                                </span>
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- Submitted -->
+                        <div class="col-md-6">
+
+                            <strong>
+                                Submitted
+                            </strong>
+
+                            <p>
+                                {{ complaint.created_at }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Status Timeline -->
+                    <hr class="my-4">
+
+
+                    <h4 class="fw-bold text-green mb-4">
+                        Complaint Status Timeline
+                    </h4>
+
+
+                    {% if status_history %}
+
+                        <div class="status-timeline">
+
+                            {% for history in status_history %}
+
+                                <div class="status-item mb-4">
+
+                                    <div class="d-flex align-items-start">
+
+
+                                        <!-- Timeline Icon -->
+                                        <div class="me-3">
+
+                                            <div
+                                                class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center"
+                                                style="width: 38px; height: 38px;"
+                                            >
+                                                ✓
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- Timeline Content -->
+                                        <div>
+
+                                            <h6 class="fw-bold mb-1">
+                                                {{ history.new_status }}
+                                            </h6>
+
+
+                                            {% if history.old_status %}
+
+                                                <p class="text-secondary mb-1">
+
+                                                    Status changed from
+
+                                                    <strong>
+                                                        {{ history.old_status }}
+                                                    </strong>
+
+                                                    to
+
+                                                    <strong>
+                                                        {{ history.new_status }}
+                                                    </strong>
+
+                                                </p>
+
+                                            {% else %}
+
+                                                <p class="text-secondary mb-1">
+                                                    Complaint submitted
+                                                </p>
+
+                                            {% endif %}
+
+
+                                            <!-- Note -->
+                                            {% if history.note %}
+
+                                                <p class="mb-1">
+                                                    {{ history.note }}
+                                                </p>
+
+                                            {% endif %}
+
+
+                                            <!-- Date and Time -->
+                                            <small class="text-secondary">
+                                                {{ history.changed_at }}
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="alert alert-info">
+
+                            <strong>
+                                Status history not available yet.
+                            </strong>
+
+                            <br>
+
+                            Your complaint has been submitted successfully.
+                            Status updates will appear here when the authority
+                            processes your complaint.
+
+                        </div>
+
+                    {% endif %}
+
+                {% endif %}
+
+
+                <!-- Back Home -->
+                <div class="text-center mt-4">
+
+                    <a
+                        href="/"
+                        class="text-green"
+                    >
+                        ← Back to Home
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

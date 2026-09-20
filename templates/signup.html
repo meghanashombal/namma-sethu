@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up | Namma Sethu{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+
+            <div class="card shadow p-4">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-green">🌉 Namma Sethu</h2>
+                    <p class="text-secondary">Create your citizen account</p>
+                </div>
+
+                <form method="POST" action="#">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            Full Name
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            class="form-control"
+                            placeholder="Enter your full name"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="Enter your email"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">
+                            Phone Number
+                        </label>
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            class="form-control"
+                            placeholder="Enter your phone number"
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Create a password"
+                            minlength="8"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">
+                            Confirm Password
+                        </label>
+                        <input
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            class="form-control"
+                            placeholder="Re-enter your password"
+                            minlength="8"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="primary-btn w-100">
+                        Create Account
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <span class="text-secondary">
+                        Already have an account?
+                    </span>
+                    <a href="/login" class="text-green fw-bold">
+                        Login
+                    </a>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="/" class="text-green">
+                        ← Back to Home
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
