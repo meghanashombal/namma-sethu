@@ -1,0 +1,12 @@
+{
+  "name": "Namma Sethu",
+  "description": "Civic complaint management platform bridging citizens to the right civic authority in Mysuru with dynamic jurisdiction, explainable routing, and SLA tracking.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

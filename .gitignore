@@ -4,3 +4,6 @@ uploads/
 __pycache__/
 *.pyc
 .vscode/
+node_modules/
+build/
+dist/

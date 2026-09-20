@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+body {
+  background-color: #F8FAF6;
+  color: #1E293B;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Noto Sans Kannada";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom leaflet pin container reset */
+.custom-leaflet-pin {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Mobile frame scroll container */
+.mobile-device-frame {
+  max-width: 440px;
+  min-height: 850px;
+  margin: 1.5rem auto;
+  border-radius: 40px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 12px #1E293B;
+  overflow: hidden;
+  position: relative;
+  background-color: #F8FAF6;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print\:p-8, .print\:p-8 * {
+    visibility: visible;
+  }
+  .print\:p-8 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
+
